@@ -17,7 +17,7 @@ const cache = new LRU({ max: 10 });
 configure({ axios, cache });
 
 function App() {
-  const [userID, setUserID] = useState(1);
+  const [userID, setUserID] = useState(3);
   const [
     { data: student, loading: getLoading, error: getError },
     executePost,
@@ -33,6 +33,8 @@ function App() {
 
   return (
     <div className="App">
+      {getLoading && <p>Loading..</p>}
+      {student && student.full_name}
       <StudentForm />
     </div>
   );
