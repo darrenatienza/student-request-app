@@ -1,0 +1,2 @@
+sELECT *
+FROM courses

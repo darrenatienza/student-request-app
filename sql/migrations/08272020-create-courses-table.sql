@@ -1,11 +1,9 @@
-CREATE TABLE users
+CREATE TABLE courses
 (
-    userid INT(6)
+    course_id INT(6)
     UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-username VARCHAR
+course_code VARCHAR
     (30) NOT NULL,
-password VARCHAR
-    (250) NOT NULL,
 create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON
     UPDATE CURRENT_TIMESTAMP
     );

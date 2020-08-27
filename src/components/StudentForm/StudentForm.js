@@ -20,6 +20,9 @@ const StudentForm = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [
+    { data: coursesData, loading: courseLoading, error: courseError },
+  ] = useAxios("/records/courses");
+  const [
     { data: postData, loading: postLoading, error: postError },
     executePost,
   ] = useAxios(
@@ -29,6 +32,7 @@ const StudentForm = () => {
     },
     { manual: true }
   );
+
   const onSubmit = (data) => {
     try {
       executePost({
@@ -43,6 +47,12 @@ const StudentForm = () => {
       console.error(err);
     }
   };
+  const courseItems =
+    //checks first if course data are loaded
+    coursesData &&
+    coursesData.records.map((course) => (
+      <option key={course.course_id}>{course.course_code}</option>
+    ));
   return (
     <div className="container ">
       <Card className="StudentForm__card mt-2">
@@ -50,19 +60,29 @@ const StudentForm = () => {
         <Card.Body>
           <Alert variant="success">
             Fill up this form with correct information
+            <div>
+              <span className="text-danger">Required *</span>
+            </div>
           </Alert>
 
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Group>
-              <Form.Label>Sr code</Form.Label>
+              <Form.Label>
+                Sr code<span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 name="sr_code"
                 type="text"
                 placeholder="XX-XXXXX"
-                ref={register({ required: true, minLength: 5, maxLength: 8 })}
+                ref={register({
+                  required: true,
+                  minLength: 5,
+                  maxLength: 8,
+                  validate: (value) => value.includes("-"),
+                })}
               />
               <Form.Text className="text-danger">
-                {errors.sr_code && "*Sr code is required!"}
+                {errors.sr_code && "Sr code is required!"}
               </Form.Text>
               <Form.Text className="text-danger">
                 {errors.sr_code &&
@@ -70,28 +90,80 @@ const StudentForm = () => {
               </Form.Text>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Full Name</Form.Label>
+              <Form.Label>
+                First Name<span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
-                name="full_name"
+                name="first_name"
                 type="text"
-                placeholder="First Name Middle Name Last Name"
-                ref={register}
+                placeholder="Your First Name"
+                ref={register({ required: true, minLength: 2 })}
               />
+              <Form.Text className="text-danger">
+                {errors.first_name && "First Name is required!"}
+              </Form.Text>
+              <Form.Text className="text-danger">
+                {errors.first_name && "Must not be acronym!"}
+              </Form.Text>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Gsuite Email Address</Form.Label>
+              <Form.Label>
+                Middle Name<span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                name="middle_name"
+                type="text"
+                placeholder="Your Middle Name"
+                ref={register({ required: true, minLength: 2 })}
+              />
+              <Form.Text className="text-danger">
+                {errors.middle_name && "Middle Name is required!"}
+              </Form.Text>
+              <Form.Text className="text-danger">
+                {errors.middle_name && "Must not be acronym!"}
+              </Form.Text>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>
+                Last Name<span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                name="last_name"
+                type="text"
+                placeholder="Your Last Name"
+                ref={register({ required: true, minLength: 2 })}
+              />
+              <Form.Text className="text-danger">
+                {errors.last_name && "LastName Name is required!"}
+              </Form.Text>
+              <Form.Text className="text-danger">
+                {errors.last_name && "Must not be acronym!"}
+              </Form.Text>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>
+                Gsuite Email Address<span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 name="gsuite_email"
                 type="email"
                 placeholder="Your Gsuite Email Address"
-                ref={register}
+                ref={register({
+                  validate: (value) => value.includes("@g.batstate-u.edu.ph"),
+                })}
               />
+              <Form.Text className="text-danger">
+                {errors.gsuite_email && "Gsuite is required!"}
+              </Form.Text>
+              <Form.Text className="text-danger">
+                {errors.gsuite_email && "Must contain GSuite Email Address "}
+              </Form.Text>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Course</Form.Label>
-              <Form.Control as="select">
-                <option>Default select</option>
-              </Form.Control>
+              <Form.Label>
+                Course<span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control as="select">{courseItems}</Form.Control>
             </Form.Group>
             <hr />
 
