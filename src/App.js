@@ -11,7 +11,7 @@ import StudentRequestForm from "./components/StudentRequestForm";
 
 const axios = Axios.create({
   //baseURL: "https://ict-system.000webhostapp.com/api.php",
-  baseURL: "http://localhost/public-api.php",
+  baseURL: "http://localhost/api/public-api.php",
 });
 const cache = new LRU({ max: 10 });
 configure({ axios, cache });

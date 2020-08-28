@@ -38,8 +38,11 @@ const StudentForm = () => {
       executePost({
         data: {
           sr_code: data.sr_code,
-          full_name: data.full_name,
-          course_id: 1,
+          full_name: "",
+          first_name: data.first_name,
+          middle_name: data.middle_name,
+          last_name: data.last_name,
+          course_id: data.course_id,
           gsuite_email: data.gsuite_email,
         },
       });
@@ -51,7 +54,9 @@ const StudentForm = () => {
     //checks first if course data are loaded
     coursesData &&
     coursesData.records.map((course) => (
-      <option key={course.course_id}>{course.course_code}</option>
+      <option key={course.course_id} value={course.course_id}>
+        {course.course_code}
+      </option>
     ));
   return (
     <div className="container ">
@@ -163,7 +168,13 @@ const StudentForm = () => {
               <Form.Label>
                 Course<span className="text-danger">*</span>
               </Form.Label>
-              <Form.Control as="select">{courseItems}</Form.Control>
+              <Form.Control
+                name="course_id"
+                as="select"
+                ref={register({ required: true })}
+              >
+                {courseItems}
+              </Form.Control>
             </Form.Group>
             <hr />
 
