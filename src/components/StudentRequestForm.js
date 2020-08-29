@@ -11,20 +11,20 @@ import {
   Modal,
 } from "react-bootstrap";
 import { MdPersonAdd } from "react-icons/md";
-import "./StudentRequestForm.css";
-
+import { useForm } from "react-hook-form";
 const StudentRequestForm = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [requestCode, setRequestCode] = useState("12345");
-  const handleSubmit = (event) => {
-    console.log();
-    event.preventDefault();
+  const { register, errors, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(JSON.stringify(data));
   };
   return (
     <div className="container">
-      <Card className="mt-2">
+      <Card className="student-request-form mt-2">
         <Card.Header>Student Password Reset Form</Card.Header>
         <Card.Body>
           <Alert variant="danger" style={{ textAlign: "center" }}>
@@ -35,16 +35,22 @@ const StudentRequestForm = () => {
           <Alert variant="success">
             Fill up this form with correct information
           </Alert>
-
           <hr />
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Group>
               <Form.Label>Sr Code</Form.Label>
               <InputGroup>
                 <FormControl
+                  name="sr_code"
                   placeholder="XX-XXXXX"
                   aria-label="Sr code"
                   aria-describedby="basic-addon2"
+                  ref={register({
+                    required: true,
+                    minLength: 5,
+                    maxLength: 8,
+                    validate: (value) => value.includes("-"),
+                  })}
                 />
                 <InputGroup.Append>
                   <OverlayTrigger
@@ -61,6 +67,13 @@ const StudentRequestForm = () => {
                   </OverlayTrigger>
                 </InputGroup.Append>
               </InputGroup>
+              <Form.Text className="text-danger">
+                {errors.sr_code && "Sr code is required!"}
+              </Form.Text>
+              <Form.Text className="text-danger">
+                {errors.sr_code &&
+                  "Length must be greater than 5 and less than 8 characters!"}
+              </Form.Text>
             </Form.Group>
             <Form.Group>
               <Form.Label>Full Name</Form.Label>
@@ -97,12 +110,7 @@ const StudentRequestForm = () => {
               />
             </Form.Group>
             <hr />
-            <Button
-              type="submit"
-              onClick={handleShow}
-              variant="primary"
-              style={{ width: "100%" }}
-            >
+            <Button type="submit" variant="primary" style={{ width: "100%" }}>
               Save
             </Button>
           </Form>

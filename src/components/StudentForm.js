@@ -10,7 +10,6 @@ import {
   Button,
   Tooltip,
 } from "react-bootstrap";
-import "./StudentForm.css";
 import { MdPersonAdd } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
