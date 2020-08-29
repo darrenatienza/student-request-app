@@ -1,2 +1,0 @@
-sELECT *
-FROM courses
