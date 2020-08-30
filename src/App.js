@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button } from "react-bootstrap";
 import StudentRequestForm from "./components/StudentRequestForm";
 import StudentRequestLookup from "./components/StudentRequestLookup";
+import GsuiteConcernForm from "./components/GsuiteConcernForm";
 const axios = Axios.create({
   //baseURL: "https://ict-system.000webhostapp.com/api.php",
   baseURL: "http://localhost/api/public-api.php",
@@ -18,7 +19,11 @@ configure({ axios, cache });
 function App() {
   const [userID, setUserID] = useState(3);
 
-  return <div className="App">{<StudentRequestLookup />}</div>;
+  return (
+    <div className="App">
+      <GsuiteConcernForm />
+    </div>
+  );
 }
 
 export default App;

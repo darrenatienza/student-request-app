@@ -8,9 +8,42 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { MdSearch, MdWarning } from "react-icons/md";
+import {
+  MdSearch,
+  MdWarning,
+  MdEmail,
+  MdSchool,
+  MdCardMembership,
+  MdCallReceived,
+} from "react-icons/md";
+import { FaIdCard, FaGoogle, FaSchool } from "react-icons/fa";
+const PendingRequestAlert = ({ requestFor, status, remarks, children }) => {
+  return (
+    <Alert variant="danger">
+      <Row>
+        <Col sm={1} className=" text-center pr-0">
+          <MdWarning size="2em" />
+        </Col>
+        <Col sm={11} className="pl">
+          <p className="ml-1 mb-0">
+            Request for: <strong>{requestFor}</strong>
+          </p>
+          <p className="ml-1 mb-0">
+            Status: <strong>{status}</strong>
+          </p>
+          <hr className="mb-2 mt-2" />
+          <p className="ml-1 mb-0">
+            Remarks:
+            <strong>{remarks}</strong>
+          </p>
+          {children}
+        </Col>
+      </Row>
+    </Alert>
+  );
+};
 
-const PendingRequest = () => {
+const PendingRequestDetail = ({ srCode, fullName, children }) => {
   return (
     <Card>
       <Card.Header>Search Result</Card.Header>
@@ -19,39 +52,45 @@ const PendingRequest = () => {
           <Card.Body>
             <span>Details</span>
             <hr />
-            <p>Sr Code:</p>
-            <p>Full Name:</p>
+            <p>Sr Code: {srCode}</p>
+            <p>Full Name: {fullName}</p>
             <p>Pending Request:</p>
-            <Alert variant="danger">
-              <Row>
-                <Col sm={1} className=" text-center pr-0">
-                  <MdWarning size="2em" />
-                </Col>
-                <Col sm={11} className="pl">
-                  <p className="ml-1 mb-0">
-                    Request for: <strong>Student Portal Reset</strong>
-                  </p>
-                  <p className="ml-1 mb-0">
-                    Status: <strong>Not Ok</strong>
-                  </p>
-                  <hr className="mb-2 mt-2" />
-                  <p className="ml-1 mb-0">
-                    Remarks:{" "}
-                    <strong>
-                      Please update your picture / signature. It must be white
-                      background.
-                    </strong>
-                  </p>
-                  <Form.Check
-                    type="checkbox"
-                    label="Yes, I updated my picture / signature."
-                    style={{ display: "inline-block" }}
-                  />
-                </Col>
-              </Row>
-            </Alert>
+            {children}
           </Card.Body>
         </Card>
+      </Card.Body>
+    </Card>
+  );
+};
+
+const StudentRequestActions = () => {
+  return (
+    <Card className="student-request-actions">
+      <Card.Header>Select action</Card.Header>
+      <Card.Body>
+        <Row>
+          <Col sm={4} className="mb-1">
+            <Button variant="info" className="student-request-actions__buttons">
+              <FaGoogle size={20} /> Gsuite account concern
+            </Button>
+          </Col>
+          <Col sm={4} className="mb-1">
+            <Button
+              variant="primary"
+              className="student-request-actions__buttons"
+            >
+              <FaSchool size={20} /> Student Portal Password reset
+            </Button>
+          </Col>
+          <Col sm={4} className="mb-1">
+            <Button
+              variant="success"
+              className="student-request-actions__buttons"
+            >
+              <FaIdCard size={20} /> ID Activation
+            </Button>
+          </Col>
+        </Row>
       </Card.Body>
     </Card>
   );
@@ -86,7 +125,16 @@ const StudentRequestLookup = () => {
               </Col>
             </Form.Group>
           </Form>
-          <PendingRequest />
+          {/**<PendingRequestDetail>
+            <PendingRequestAlert>
+              <Form.Check
+                type="checkbox"
+                label="Yes, I updated my picture / signature."
+                style={{ display: "inline-block" }}
+              />
+            </PendingRequestAlert>
+          </PendingRequestDetail> */}
+          <StudentRequestActions />
         </Card.Body>
         <Card.Footer>
           <p className="text-danger mb-0">

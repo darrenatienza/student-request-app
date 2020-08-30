@@ -8,6 +8,15 @@
 .student-request-lookup {
   width: 100%;
 }
+.student-request-actions__buttons {
+  height: 100%;
+  width: 100%;
+}
+.gsuite-concern-form__failed-activation-button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 @media only screen and (min-width: 768px) {
   .student-form {
     width: 50%;
