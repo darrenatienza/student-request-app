@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Alert,
@@ -7,6 +7,7 @@ import {
   InputGroup,
   Row,
   Col,
+  Modal,
 } from "react-bootstrap";
 import {
   MdSearch,
@@ -63,7 +64,10 @@ const PendingRequestDetail = ({ srCode, fullName, children }) => {
   );
 };
 
-const StudentRequestActions = () => {
+const StudentRequestActions = ({
+  cbHandleStudentPortalPasswordReset,
+  cbHandleShowStudentIDActivationModal,
+}) => {
   return (
     <Card className="student-request-actions">
       <Card.Header>Select action</Card.Header>
@@ -76,6 +80,7 @@ const StudentRequestActions = () => {
           </Col>
           <Col sm={4} className="mb-1">
             <Button
+              onClick={cbHandleStudentPortalPasswordReset}
               variant="primary"
               className="student-request-actions__buttons"
             >
@@ -84,6 +89,7 @@ const StudentRequestActions = () => {
           </Col>
           <Col sm={4} className="mb-1">
             <Button
+              onClick={cbHandleShowStudentIDActivationModal}
               variant="success"
               className="student-request-actions__buttons"
             >
@@ -96,7 +102,166 @@ const StudentRequestActions = () => {
   );
 };
 
+const StudentPortalPasswordResetModal = ({ show, handleShow, handleClose }) => {
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Student Password Portal Reset Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <MustRead />
+
+        <Card className="mb-2" style={{ width: "100%" }}>
+          <Card.Header>Reminders</Card.Header>
+          <Card.Body>
+            <p>
+              Upon resetting your Student Portal Password, your new password
+              will be the same as your Sr Code.
+            </p>
+          </Card.Body>
+        </Card>
+      </Modal.Body>
+      <Modal.Footer>
+        <div className="student-request-panel__submit-button">
+          <Form.Check
+            className="mr-2"
+            aria-label="option 1"
+            label="Yes, I understand submit a request."
+          />
+
+          <Button variant="success mr-1">Submit</Button>
+          <Button variant="outline-secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </div>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+const SubmissionModal = ({
+  title,
+  show,
+  handleShow,
+  handleClose,
+  children,
+}) => {
+  const [isSubmitEnable, setIsSubmitEnable] = useState(false);
+
+  useEffect(() => {
+    // required to make the submit button in a proper state
+    setIsSubmitEnable(false);
+    return () => {};
+  }, [show]);
+  return (
+    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <Modal.Header closeButton>
+        <Modal.Title>{title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <MustRead />
+
+        {children}
+      </Modal.Body>
+      <Modal.Footer>
+        <div className="student-request-panel__submit-button">
+          <Form.Check
+            onClick={() => setIsSubmitEnable(!isSubmitEnable)}
+            className="mr-2"
+            aria-label="option 1"
+            label="Yes, I understand submit a request."
+          />
+
+          <Button variant="success mr-1" disabled={!isSubmitEnable}>
+            Submit
+          </Button>
+          <Button variant="outline-secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </div>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+const StudentIDActivationModal = ({ show, handleShow, handleClose }) => {
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Student ID Activation Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <MustRead />
+        <div className="student-request-panel__submit-button mt-2">
+          <Form.Check
+            className="mr-2"
+            aria-label="option 1"
+            label="Yes, I understand submit a request."
+          />
+
+          <Button variant="success">Submit</Button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+const MustRead = () => {
+  return (
+    <Card className="mb-1">
+      <Card.Header>
+        <span className="text-danger">Must Read</span>
+      </Card.Header>
+      <Card.Body>
+        <p>
+          Please be advised that the accomplishing of your concerns is scheduled
+          from{" "}
+          <strong>
+            <span className="text-success">
+              Monday to Friday, 8:00 AM to 5:00 PM
+            </span>
+          </strong>
+          .
+        </p>
+        <p>
+          Accomplishing your request will start upon the time you submitted this
+          request onwards.
+        </p>
+        <p>
+          For <strong>checking status of your request</strong>, just visit this
+          app and search for your request by providing your SR Code upon opening
+          this app.
+        </p>
+        <p>
+          If the{" "}
+          <strong>
+            ICT Office has a concern with your submitted requirements
+          </strong>
+          , ICT Office will provide <strong>Remarks</strong> on your pending
+          request!
+        </p>
+        <p>
+          <strong>
+            <span className="text-danger">Note: </span>
+          </strong>
+          This App is exclusive only for BatStateU Rosario Students. Any campus
+          that accomplishes this App will not be entertain. Thank you.
+        </p>
+      </Card.Body>
+    </Card>
+  );
+};
 const StudentRequestLookup = () => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [
+    showStudentIDActivationModal,
+    setShowStudentIDActivationModal,
+  ] = useState(false);
+  const handleCloseStudentIDActivationModal = () =>
+    setShowStudentIDActivationModal(false);
+  const handleShowStudentIDActivationModal = () =>
+    setShowStudentIDActivationModal(true);
+
   return (
     <div className="container">
       <Card className="student-request-lookup mt-4">
@@ -109,21 +274,17 @@ const StudentRequestLookup = () => {
             </p>
           </Alert>
           <Form>
-            <Form.Group as={Row}>
-              <Form.Label className="pr-0" column sm={2}>
-                Sr Code
-              </Form.Label>
-              <Col sm={10}>
-                <InputGroup>
-                  <Form.Control type="text" placeholder="XX-XXXXX" />
-                  <InputGroup.Append>
-                    <Button type="submit">
-                      <MdSearch />
-                    </Button>
-                  </InputGroup.Append>
-                </InputGroup>
-              </Col>
-            </Form.Group>
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">Sr Code</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control type="text" placeholder="XX-XXXXX" />
+              <InputGroup.Append>
+                <Button type="submit">
+                  <MdSearch />
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
           </Form>
           {/**<PendingRequestDetail>
             <PendingRequestAlert>
@@ -134,7 +295,32 @@ const StudentRequestLookup = () => {
               />
             </PendingRequestAlert>
           </PendingRequestDetail> */}
-          <StudentRequestActions />
+          <StudentRequestActions
+            cbHandleStudentPortalPasswordReset={() => handleShow()}
+            cbHandleShowStudentIDActivationModal={() =>
+              handleShowStudentIDActivationModal()
+            }
+          />
+          <SubmissionModal
+            title="Student Password Portal Reset Confirmation"
+            show={show}
+            handleClose={() => handleClose()}
+          >
+            <Card className="mb-2">
+              <Card.Header>Reminders</Card.Header>
+              <Card.Body>
+                <p>
+                  Upon resetting your Student Portal Password, your new password
+                  will be the same as your Sr Code.
+                </p>
+              </Card.Body>
+            </Card>
+          </SubmissionModal>
+          <SubmissionModal
+            title="Student ID Activation Confirmation"
+            show={showStudentIDActivationModal}
+            handleClose={() => handleCloseStudentIDActivationModal()}
+          />
         </Card.Body>
         <Card.Footer>
           <p className="text-danger mb-0">

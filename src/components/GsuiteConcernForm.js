@@ -27,7 +27,7 @@ const GsuiteDefinitions = ({ gsuiteConcernName }) => {
           </div>
         </div>
       );
-      break;
+
     case "Forgot Password":
       return (
         <>
@@ -51,7 +51,7 @@ const GsuiteDefinitions = ({ gsuiteConcernName }) => {
           </div>
         </>
       );
-      break;
+
     case "Wrong Spelling":
       return (
         <>
@@ -68,7 +68,7 @@ const GsuiteDefinitions = ({ gsuiteConcernName }) => {
           </div>
         </>
       );
-      break;
+
     case "Name Duplication":
       return (
         <>
@@ -84,7 +84,7 @@ const GsuiteDefinitions = ({ gsuiteConcernName }) => {
           </div>
         </>
       );
-      break;
+
     default:
       return (
         <p>
@@ -92,7 +92,6 @@ const GsuiteDefinitions = ({ gsuiteConcernName }) => {
           <span className="text-primary">ict.rosario@g.batstate-u.edu.ph</span>.
         </p>
       );
-      break;
   }
 };
 
@@ -123,7 +122,7 @@ const GsuiteConcernForm = () => {
               </span>
             </Card.Header>
             <Card.Body>
-              <GsuiteDefinitions gsuiteConcernName="" />
+              <GsuiteDefinitions gsuiteConcernName="Forgot Password" />
             </Card.Body>
           </Card>
         </Card.Body>
