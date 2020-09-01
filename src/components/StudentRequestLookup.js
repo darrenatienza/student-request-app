@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import useAxios, { configure } from "axios-hooks";
+import { useCourse } from "../entities";
 import {
   Card,
   Alert,
@@ -183,6 +185,17 @@ const SubmissionModal = ({
   );
 };
 const StudentIDActivationModal = ({ show, handleShow, handleClose }) => {
+  const [course, { get }] = useCourse();
+  const [
+    { data: coursesData, loading: courseLoading, error: courseError },
+    refetch,
+  ] = useAxios("/records/courses");
+
+  useEffect(() => {
+    coursesData && get(coursesData.records);
+
+    return () => {};
+  }, [coursesData, get]);
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -226,8 +239,7 @@ const MustRead = () => {
         </p>
         <p>
           For <strong>checking status of your request</strong>, just visit this
-          app and search for your request by providing your SR Code upon opening
-          this app.
+          app and search using your Sr Code on Search Bar.
         </p>
         <p>
           If the{" "}
@@ -250,6 +262,7 @@ const MustRead = () => {
 };
 const StudentRequestLookup = () => {
   const [show, setShow] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
