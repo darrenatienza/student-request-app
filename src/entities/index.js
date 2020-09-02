@@ -1,4 +1,4 @@
 import { makeEntity } from "react-entities";
-import * as courses from "./course";
+import * as mustRead from "./mustRead";
 
-export const useCourse = makeEntity(courses);
+export const useMustRead = makeEntity(mustRead);

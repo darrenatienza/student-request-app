@@ -1,22 +1,11 @@
 import React, { useState } from "react";
-import {
-  Card,
-  InputGroup,
-  FormControl,
-  Button,
-  Modal,
-  Form,
-} from "react-bootstrap";
-import MustRead from "./MustRead";
+import SubmissionModal from "./SubmissionModal";
+import { InputGroup, FormControl, Card } from "react-bootstrap";
 
 const GsuiteDefinitions = ({ gsuiteConcernName, handleSubmit }) => {
   return (
     <>
-      {gsuiteConcernName == "Forgot Password" ? (
-        <SubmissionCard title={gsuiteConcernName}></SubmissionCard>
-      ) : (
-        ""
-      )}
+      {gsuiteConcernName == "Forgot Password" ? <></> : ""}
 
       {gsuiteConcernName ==
       "Failed Activation (cant login in gsuite account for the first time)" ? (
@@ -88,54 +77,36 @@ const GsuiteConcernOptions = () => {
     </>
   );
 };
-const GsuiteConcernForm = ({ show, handleClose }) => {
+const GsuiteConcernModal = ({ show, handleClose }) => {
   const [gsuiteConcern, setSelectedGsuiteConcern] = useState("");
   const handleChange = (e) => {
     setSelectedGsuiteConcern(e.target.value);
   };
   return (
-    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-      <Modal.Header closeButton>
-        <Modal.Title>Gsuite Concerns</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Card className="gsuite-concern-form">
-          <Card.Header>Please select your GSuite Concerns</Card.Header>
-          <Card.Body>
-            <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">
-                  GSuite concerns
-                </InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl
-                as="select"
-                aria-label=""
-                aria-describedby="basic-addon1"
-                onChange={(e) => handleChange(e)}
-              >
-                <option>Select..</option>
-                <GsuiteConcernOptions />
-              </FormControl>
-            </InputGroup>
-            <MustRead />
-            <GsuiteDefinitions gsuiteConcernName={gsuiteConcern} />
-          </Card.Body>
-        </Card>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="submit-button mt-2">
-          <Form.Check
-            className="mr-2"
-            aria-label="option 1"
-            label="Yes, I understand submit a request."
-          />
-
-          <Button variant="success">Submit</Button>
-        </div>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <SubmissionModal
+        title="Gsuite Concern"
+        show={show}
+        handleClose={handleClose}
+      >
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="basic-addon1">GSuite concerns</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            as="select"
+            aria-label=""
+            aria-describedby="basic-addon1"
+            onChange={(e) => handleChange(e)}
+          >
+            <option>Select..</option>
+            <GsuiteConcernOptions />
+          </FormControl>
+        </InputGroup>
+        <GsuiteDefinitions gsuiteConcernName={gsuiteConcern} />
+      </SubmissionModal>
+    </>
   );
 };
 
-export default GsuiteConcernForm;
+export default GsuiteConcernModal;
