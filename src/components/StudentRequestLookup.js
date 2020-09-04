@@ -4,6 +4,7 @@ import { useCourse } from "../entities";
 import MustRead from "./MustRead";
 import SubmissionModal from "./SubmissionModal";
 import GsuiteConcernModal from "./GsuiteConcernModal";
+import StudentRequestSearch from "./StudentRequestSearch";
 import {
   Card,
   Alert,
@@ -72,45 +73,50 @@ const PendingRequestDetail = ({ srCode, fullName, children }) => {
 
 // buttons to click for opening the modals
 const StudentRequestActions = ({
+  show,
   cbHandleStudentPortalPasswordReset,
   cbHandleShowStudentIDActivationModal,
   cbHandleShowGsuiteConcernFormModal,
 }) => {
   return (
-    <Card className="student-request-actions">
-      <Card.Header>Select action</Card.Header>
-      <Card.Body>
-        <Row>
-          <Col sm={4} className="mb-1">
-            <Button
-              onClick={cbHandleShowGsuiteConcernFormModal}
-              variant="info"
-              className="student-request-actions__buttons"
-            >
-              <FaGoogle size={20} /> Gsuite account concern
-            </Button>
-          </Col>
-          <Col sm={4} className="mb-1">
-            <Button
-              onClick={cbHandleStudentPortalPasswordReset}
-              variant="primary"
-              className="student-request-actions__buttons"
-            >
-              <FaSchool size={20} /> Student Portal Password reset
-            </Button>
-          </Col>
-          <Col sm={4} className="mb-1">
-            <Button
-              onClick={cbHandleShowStudentIDActivationModal}
-              variant="success"
-              className="student-request-actions__buttons"
-            >
-              <FaIdCard size={20} /> ID Activation
-            </Button>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
+    <>
+      {show && (
+        <Card className="student-request-actions">
+          <Card.Header>Select action</Card.Header>
+          <Card.Body>
+            <Row>
+              <Col sm={4} className="mb-1">
+                <Button
+                  onClick={cbHandleShowGsuiteConcernFormModal}
+                  variant="info"
+                  className="student-request-actions__buttons"
+                >
+                  <FaGoogle size={20} /> Gsuite account concern
+                </Button>
+              </Col>
+              <Col sm={4} className="mb-1">
+                <Button
+                  onClick={cbHandleStudentPortalPasswordReset}
+                  variant="primary"
+                  className="student-request-actions__buttons"
+                >
+                  <FaSchool size={20} /> Student Portal Password reset
+                </Button>
+              </Col>
+              <Col sm={4} className="mb-1">
+                <Button
+                  onClick={cbHandleShowStudentIDActivationModal}
+                  variant="success"
+                  className="student-request-actions__buttons"
+                >
+                  <FaIdCard size={20} /> ID Activation
+                </Button>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      )}
+    </>
   );
 };
 
@@ -154,6 +160,11 @@ const StudentRequestLookup = () => {
     isGsuiteConcernFormModalVisible,
     setGsuiteConcernFormModalVisible,
   ] = useState(false);
+  const [isRequestFound, setRequestFound] = useState(false);
+  const handleSearchClick = (event) => {
+    console.log(event.target.value);
+    event.preventDefault();
+  };
   return (
     <div className="container">
       <Card className="student-request-lookup mt-4">
@@ -165,20 +176,10 @@ const StudentRequestLookup = () => {
               pending request.
             </p>
           </Alert>
-          <Form>
-            <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">Sr Code</InputGroup.Text>
-              </InputGroup.Prepend>
-              <Form.Control type="text" placeholder="XX-XXXXX" />
-              <InputGroup.Append>
-                <Button type="submit">
-                  <MdSearch />
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form>
-          {/**<PendingRequestDetail>
+          <StudentRequestSearch
+            onSearchClick={(event) => handleSearchClick(event)}
+          />
+          <PendingRequestDetail>
             <PendingRequestAlert>
               <Form.Check
                 type="checkbox"
@@ -186,9 +187,10 @@ const StudentRequestLookup = () => {
                 style={{ display: "inline-block" }}
               />
             </PendingRequestAlert>
-          </PendingRequestDetail> */}
+          </PendingRequestDetail>
 
           <StudentRequestActions
+            show={isRequestFound}
             cbHandleStudentPortalPasswordReset={() => handleShow()}
             cbHandleShowStudentIDActivationModal={() =>
               handleShowStudentIDActivationModal()
