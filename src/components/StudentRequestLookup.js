@@ -5,6 +5,7 @@ import MustRead from "./MustRead";
 import SubmissionModal from "./SubmissionModal";
 import GsuiteConcernModal from "./GsuiteConcernModal";
 import StudentRequestSearch from "./StudentRequestSearch";
+import { useFilter, useDetail } from "../entities";
 import {
   Card,
   Alert,
@@ -25,9 +26,17 @@ import {
 } from "react-icons/md";
 import { FaIdCard, FaGoogle, FaSchool } from "react-icons/fa";
 import GsuiteConcernForm from "./GsuiteConcernForm";
-const PendingRequestAlert = ({ requestFor, status, remarks, children }) => {
+import StudentForm from "./StudentForm";
+const PendingRequestAlert = ({
+  id,
+  requestFor,
+  status,
+  remarks,
+  handleCheck,
+}) => {
+  const alertType = () => (status == "Ok" ? "success" : "danger");
   return (
-    <Alert variant="danger">
+    <Alert variant={alertType()}>
       <Row>
         <Col sm={1} className=" text-center pr-0">
           <MdWarning size="2em" />
@@ -41,17 +50,29 @@ const PendingRequestAlert = ({ requestFor, status, remarks, children }) => {
           </p>
           <hr className="mb-2 mt-2" />
           <p className="ml-1 mb-0">
-            Remarks:
-            <strong>{remarks}</strong>
+            Remarks: <strong>{remarks}</strong>
           </p>
-          {children}
+
+          {status != "Ok" && requestFor == "ID Activation" ? (
+            // display for id request only
+            <Form.Check
+              value={id}
+              onChange={handleCheck}
+              type="checkbox"
+              label="Yes, I updated my picture / signature."
+              style={{ display: "inline-block" }}
+            />
+          ) : (
+            <></>
+          )}
         </Col>
       </Row>
     </Alert>
   );
 };
 
-const PendingRequestDetail = ({ srCode, fullName, children }) => {
+const Details = () => {
+  const [detail] = useDetail();
   return (
     <Card>
       <Card.Header>Search Result</Card.Header>
@@ -60,10 +81,23 @@ const PendingRequestDetail = ({ srCode, fullName, children }) => {
           <Card.Body>
             <span>Details</span>
             <hr />
-            <p>Sr Code: {srCode}</p>
-            <p>Full Name: {fullName}</p>
+            <p>
+              Sr Code: <strong>{detail.srCode}</strong>
+            </p>
+            <p>
+              Full Name: <strong>{detail.fullName}</strong>
+            </p>
             <p>Pending Request:</p>
-            {children}
+            {detail.requests.map((request, idx) => (
+              <PendingRequestAlert
+                key={idx}
+                id={idx}
+                handleCheck={(e) => console.log(e.target.value)}
+                requestFor={request.requestFor}
+                status={request.status}
+                remarks={request.remarks}
+              />
+            ))}
           </Card.Body>
         </Card>
       </Card.Body>
@@ -176,19 +210,10 @@ const StudentRequestLookup = () => {
               pending request.
             </p>
           </Alert>
-          <StudentRequestSearch
-            onSearchClick={(event) => handleSearchClick(event)}
-          />
-          <PendingRequestDetail>
-            <PendingRequestAlert>
-              <Form.Check
-                type="checkbox"
-                label="Yes, I updated my picture / signature."
-                style={{ display: "inline-block" }}
-              />
-            </PendingRequestAlert>
-          </PendingRequestDetail>
+          <StudentRequestSearch />
 
+          <Details></Details>
+          <StudentForm />
           <StudentRequestActions
             show={isRequestFound}
             cbHandleStudentPortalPasswordReset={() => handleShow()}
